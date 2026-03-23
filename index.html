@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAPAN FOUNDER ARCHIVE | あなたの人生を、公式記録に。</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <style>
+        :root {
+            --color-bg: #0a0a0a;       /* 深い黒 */
+            --color-surface: #141414;  /* 少し浮かせた黒 */
+            --color-text: #e0e0e0;     /* 柔らかな白 */
+            --color-text-muted: #999;  /* サブテキスト */
+            --color-accent: #c6a87c;   /* 落ち着いたゴールド */
+            --font-main: 'Noto Serif JP', serif;
+            
+            /* 流体タイポグラフィ */
+            --fz-hero: clamp(2rem, 5vw, 4rem);
+            --fz-h2: clamp(1.75rem, 4vw, 2.5rem);
+            --fz-h3: clamp(1.25rem, 2.5vw, 1.75rem);
+            --fz-p: clamp(0.95rem, 1.5vw, 1.1rem);
+            --fz-sm: clamp(0.75rem, 1vw, 0.9rem);
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 2;
+            overflow-x: hidden;
+            letter-spacing: 0.08em;
+        }
+
+        /* ガイドライン：文字の泣き防止 */
+        .text-unit {
+            display: inline-block;
+            white-space: nowrap;
+            vertical-align: top;
+        }
+
+        /* セクションの余白設計 */
+        section {
+            padding: clamp(5rem, 12vh, 12rem) clamp(1.5rem, 5vw, 4rem);
+            position: relative;
+        }
+
+        .container {
+            max-width: 1000px; /* 読みやすさを重視し少し狭めに */
+            margin: 0 auto;
+        }
+
+        /* タイポグラフィ詳細 */
+        .hero-title { font-size: var(--fz-hero); line-height: 1.5; font-weight: 300; }
+        .sec-title { 
+            font-size: var(--fz-h2); 
+            line-height: 1.4; 
+            font-weight: 400; 
+            margin-bottom: clamp(2.5rem, 6vh, 5rem); 
+            text-align: center; 
+        }
+        .sec-title span.en { 
+            color: var(--color-accent); 
+            display: block; 
+            font-size: var(--fz-sm); 
+            letter-spacing: 0.25em; 
+            margin-bottom: 1rem; 
+            text-transform: uppercase; 
+        }
+        p { font-size: var(--fz-p); margin-bottom: 1.5rem; }
+
+        /* 装飾ライン */
+        .line-v { 
+            width: 1px; 
+            height: clamp(60px, 12vh, 100px); 
+            background: linear-gradient(to bottom, transparent, var(--color-accent), transparent); 
+            margin: 0 auto clamp(2rem, 5vh, 4rem); 
+        }
+
+        /* ボタンデザイン */
+        .btn-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+        @media (min-width: 768px) {
+            .btn-wrap {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+        .btn {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem 2.5rem;
+            border: 1px solid var(--color-accent);
+            color: var(--color-text);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+            overflow: hidden;
+            font-size: var(--fz-p);
+            width: 100%;
+            max-width: 380px;
+        }
+        .btn span.sub {
+            font-size: var(--fz-sm);
+            color: var(--color-accent);
+            margin-top: 0.25rem;
+            transition: color 0.4s;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--color-accent);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: -1;
+        }
+        .btn:hover::before { transform: translateY(0); }
+        .btn:hover { color: var(--color-bg); }
+        .btn:hover span.sub { color: var(--color-bg); opacity: 0.8; }
+        
+        .btn-solid {
+            background-color: var(--color-accent);
+            color: var(--color-bg);
+            font-weight: 500;
+        }
+        .btn-solid span.sub { color: var(--color-bg); opacity: 0.8; }
+        .btn-solid::before { background-color: #fff; }
+
+        /* 画像パララックス用ラッパー */
+        .img-wrapper {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: var(--color-surface);
+        }
+        .img-wrapper.portrait {
+            aspect-ratio: 3 / 4;
+        }
+        .img-parallax {
+            width: 100%;
+            height: 130%;
+            object-fit: cover;
+            position: absolute;
+            top: -15%;
+            left: 0;
+            filter: grayscale(80%) contrast(1.1) brightness(0.8);
+            transition: filter 0.5s ease;
+        }
+        .img-wrapper:hover .img-parallax {
+            filter: grayscale(30%) contrast(1.1) brightness(0.9);
+        }
+
+        /* アコーディオン (FAQ) */
+        .faq-item {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .faq-q {
+            cursor: pointer;
+            padding: 2rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--fz-h3);
+            font-weight: 400;
+            color: var(--color-accent);
+        }
+        .faq-q::after {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 300;
+            transition: transform 0.3s;
+        }
+        .faq-item.active .faq-q::after {
+            transform: rotate(45deg);
+        }
+        .faq-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+        .faq-item.active .faq-a {
+            padding-bottom: 2rem;
+        }
+
+        /* GSAPアニメーション初期状態 */
+        .fade-up { opacity: 0; transform: translateY(40px); }
+        .fade-in { opacity: 0; }
+        
+        /* 装飾背景 */
+        .bg-gradient-noise {
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, var(--color-bg) 100%);
+        }
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2012&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) brightness(0.2);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ■ ファーストビュー -->
+    <section class="h-screen flex flex-col justify-center items-center text-center relative overflow-hidden">
+        <div class="hero-bg img-parallax"></div>
+        <div class="container relative z-10">
+            <h1 class="hero-title fade-up hero-anim mb-8">
+                <span class="text-unit">あなたの人生を、</span><span class="text-unit">公式記録に。</span>
+            </h1>
+            <p class="fade-up hero-anim text-lg md:text-xl mb-12 text-[#c6a87c] tracking-widest">
+                <span class="text-unit">経営者100人の哲学を</span><span class="text-unit">未来へ遺す</span><br>
+                <span class="text-unit font-bold tracking-[0.2em] mt-4 block">JAPAN FOUNDER ARCHIVE</span>
+            </p>
+            <p class="fade-up hero-anim text-sm md:text-base text-gray-400">
+                <span class="text-unit">それは広告ではない。</span><br>
+                <span class="text-unit">あなたの人生を、</span><span class="text-unit">言葉として未来に残すプロジェクト。</span>
+            </p>
+            
+            <div class="btn-wrap fade-up hero-anim mt-12">
+                <a href="#entry" class="btn btn-solid">
+                    <span class="text-unit">掲載候補としてエントリーする</span>
+                </a>
+                <a href="#contact" class="btn">
+                    <span class="text-unit">まずは企画説明を受ける</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center fade-in hero-anim" style="animation-delay: 1s;">
+            <span class="text-xs tracking-widest text-gray-500 mb-2">SCROLL</span>
+            <div class="w-[1px] h-12 bg-gradient-to-b from-gray-500 to-transparent"></div>
+        </div>
+    </section>
+
+    <!-- ■ 問いかけ（共感ブロック） -->
+    <section class="bg-gradient-noise text-center">
+        <div class="container">
+            <h2 class="sec-title fade-up">
+                <span class="en">Empathy</span>
+                <span class="text-unit">あなたの人生は、</span><br class="md:hidden"><span class="text-unit">言葉として残っていますか？</span>
+            </h2>
+            
+            <div class="space-y-6 md:space-y-8 mb-16">
+                <p class="fade-up text-gray-300">・なぜこの事業を始めたのか</p>
+                <p class="fade-up text-gray-300">・どんな失敗をして、何を学んだのか</p>
+                <p class="fade-up text-gray-300">・迷ったとき、何を基準に決断してきたのか</p>
+            </div>
+
+            <p class="fade-up text-xl md:text-2xl mb-12">
+                <span class="text-unit">そのすべてを、</span><br>
+                <span class="text-unit">社員や後継者は、</span><span class="text-unit">正しく理解できていますか？</span>
+            </p>
+
+            <div class="line-v fade-up"></div>
+
+            <p class="fade-up text-xl md:text-2xl text-[var(--color-accent)]">
+                <span class="text-unit">そして——</span><br><br>
+                <span class="text-unit">10年後、20年後、</span><span class="text-unit">あなたが現場を離れたとき</span><br>
+                <span class="text-unit">その「判断基準」は、</span><span class="text-unit">組織に残っていますか？</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- ■ 提案（定義づけ） -->
+    <section class="relative">
+        <div class="container flex flex-col md:flex-row items-center gap-10 md:gap-20">
+            <div class="w-full md:w-1/2 fade-up">
+                <div class="img-wrapper portrait">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop" alt="経営者の後ろ姿" class="img-parallax">
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 mt-10 md:mt-0">
+                <h2 class="sec-title !text-left fade-up">
+                    <span class="en">Definition</span>
+                    <span class="text-unit">これは、広告でも、</span><span class="text-unit">自己啓発でもありません。</span>
+                </h2>
+                <p class="fade-up text-gray-300">
+                    <span class="text-unit">経営者の人生を編集し、</span><br>
+                    <span class="text-unit">公式な記録として未来に残す。</span>
+                </p>
+                <p class="fade-up text-xl text-[var(--color-accent)] mt-8">
+                    <span class="text-unit">そのためのアーカイブプロジェクトです。</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ■ コンセプト -->
+    <section class="bg-gradient-noise text-center">
+        <div class="container max-w-3xl">
+            <h2 class="sec-title fade-up">
+                <span class="en">Concept</span>
+                <span class="text-unit tracking-[0.2em]">JAPAN FOUNDER ARCHIVE</span>
+            </h2>
+            <p class="fade-up text-xl md:text-2xl mb-10 leading-relaxed">
+                <span class="text-unit">100人の経営者の人生哲学を、</span><br>
+                <span class="text-unit">子どもにも伝わる言葉で編み、記録する。</span>
+            </p>
+            <p class="fade-up text-gray-300">
+                <span class="text-unit">それは単なるストーリーではなく、</span><br>
+                <span class="text-unit text-[var(--color-accent)] font-medium text-lg mt-4 block">次世代に受け継がれる「判断基準のアーカイブ」です。</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- ■ このプロジェクトの3つの価値 -->
+    <section>
+        <div class="container">
+            <h2 class="sec-title fade-up">
+                <span class="en">3 Values</span>
+                <span class="text-unit">このプロジェクトの3つの価値</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-20">
+                <!-- Value 01 -->
+                <div class="fade-up">
+                    <span class="text-[var(--color-accent)] font-bold text-4xl block mb-4">01</span>
+                    <h3 class="text-xl mb-6 pb-4 border-b border-[rgba(255,255,255,0.1)]">
+                        <span class="text-unit">人生の公式記録を残す</span>
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-6">
+                        <span class="text-unit">あなたの経験、葛藤、決断、信念を、</span><br>
+                        <span class="text-unit">プロの編集によって言語化します。</span>
+                    </p>
+                    <ul class="text-gray-300 text-sm space-y-2 mb-6 ml-4 list-disc marker:text-[var(--color-accent)]">
+                        <li>創業の背景</li>
+                        <li>失敗とそこからの学び</li>
+                        <li>意思決定の基準</li>
+                        <li>今も変わらない価値観</li>
+                    </ul>
+                    <p class="text-[var(--color-accent)]">
+                        <span class="text-unit">それらを整理し、</span><br>
+                        <span class="text-unit">一冊の「人生の記録」として残します。</span>
+                    </p>
+                </div>
+
+                <!-- Value 02 -->
+                <div class="fade-up" style="transition-delay: 0.1s;">
+                    <span class="text-[var(--color-accent)] font-bold text-4xl block mb-4">02</span>
+                    <h3 class="text-xl mb-6 pb-4 border-b border-[rgba(255,255,255,0.1)]">
+                        <span class="text-unit">経営資産として活用できる</span>
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-6">
+                        <span class="text-unit">このアーカイブは、</span><br>
+                        <span class="text-unit">単なる記録ではありません。</span>
+                    </p>
+                    <ul class="text-gray-300 text-sm space-y-2 mb-6 ml-4 list-disc marker:text-[var(--color-accent)]">
+                        <li>採用ブランディング</li>
+                        <li>社員教育、理念浸透</li>
+                        <li>企業ストーリーの可視化</li>
+                        <li>後継者への継承資料</li>
+                    </ul>
+                    <p class="text-[var(--color-accent)]">
+                        <span class="text-unit">として、長期的に活用できる</span><br>
+                        <span class="text-unit">“経営資産”になります。</span>
+                    </p>
+                </div>
+
+                <!-- Value 03 -->
+                <div class="fade-up" style="transition-delay: 0.2s;">
+                    <span class="text-[var(--color-accent)] font-bold text-4xl block mb-4">03</span>
+                    <h3 class="text-xl mb-6 pb-4 border-b border-[rgba(255,255,255,0.1)]">
+                        <span class="text-unit">次世代への社会的価値</span>
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-6">
+                        <span class="text-unit">完成した冊子は、</span><br>
+                        <span class="text-unit">あなたの母校へ寄贈されます。</span>
+                    </p>
+                    <p class="text-gray-300 text-sm mb-6">
+                        <span class="text-unit">子どもたちにとって、</span><br>
+                        <span class="text-unit">遠い成功者ではなく、</span><br>
+                        <span class="text-unit font-bold text-white tracking-widest my-2 block">「身近なロールモデル」</span>
+                        <span class="text-unit">として届く。</span>
+                    </p>
+                    <p class="text-[var(--color-accent)]">
+                        <span class="text-unit">あなたの言葉が、</span><br>
+                        <span class="text-unit">次の挑戦者を生み出すきっかけになります。</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ■ 成果物 & 掲載イメージ -->
+    <section class="bg-[var(--color-surface)]">
+        <div class="container">
+            <h2 class="sec-title fade-up">
+                <span class="en">Deliverables</span>
+                <span class="text-unit">成果物</span>
+            </h2>
+            
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="w-full md:w-1/2 fade-up">
+                    <p class="mb-6"><span class="text-unit">本プロジェクトでは、以下を制作します。</span></p>
+                    <ul class="space-y-4 text-gray-300 border-l border-[var(--color-accent)] pl-6">
+                        <li><span class="text-[var(--color-accent)] mr-2">■</span> 2〜3時間の人生インタビュー</li>
+                        <li><span class="text-[var(--color-accent)] mr-2">■</span> プロ編集による原稿（約2,000〜3,000字）</li>
+                        <li><span class="text-[var(--color-accent)] mr-2">■</span> ポートレート撮影（高品質ビジュアル）</li>
+                        <li><span class="text-[var(--color-accent)] mr-2">■</span> アーカイブ冊子（2ページ掲載）</li>
+                        <li><span class="text-[var(--color-accent)] mr-2">■</span> デジタル掲載（Webアーカイブ）</li>
+                        <li><span class="text-[var(--color-accent)] mr-2">■</span> 掲載誌の進呈</li>
+                        <li><span class="text-[var(--color-accent)] mr-2">■</span> 母校への寄贈（100冊）</li>
+                    </ul>
+                </div>
+                
+                <div class="w-full md:w-1/2 fade-up">
+                    <div class="img-wrapper shadow-2xl">
+                        <!-- 誌面サンプル・写真のプレースホルダー -->
+                        <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop" alt="アーカイブ冊子イメージ" class="img-parallax">
+                        <div class="absolute inset-0 border border-white/20 m-4 pointer-events-none"></div>
+                        <div class="absolute bottom-4 right-6 text-xs text-white/70 tracking-widest">SAMPLE IMAGE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ■ 制作の流れ -->
+    <section>
+        <div class="container max-w-4xl">
+            <h2 class="sec-title fade-up">
+                <span class="en">Process</span>
+                <span class="text-unit">制作の流れ</span>
+            </h2>
+
+            <div class="relative mt-16">
+                <!-- ライン -->
+                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-[1px] bg-[rgba(255,255,255,0.1)] -translate-x-1/2 hidden md:block"></div>
+
+                <div class="space-y-12 relative">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col md:flex-row items-center gap-6 fade-up">
+                        <div class="md:w-1/2 text-left md:text-right md:pr-12 w-full">
+                            <h4 class="text-xl text-[var(--color-accent)]">① エントリー</h4>
+                            <p class="text-sm text-gray-400 mt-2">掲載候補申請を行っていただきます。</p>
+                        </div>
+                        <div class="hidden md:flex w-8 h-8 rounded-full bg-[var(--color-bg)] border border-[var(--color-accent)] absolute left-1/2 -translate-x-1/2 items-center justify-center z-10">
+                            <div class="w-2 h-2 bg-[var(--color-accent)] rounded-full"></div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 w-full hidden md:block"></div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex flex-col md:flex-row items-center gap-6 fade-up">
+                        <div class="md:w-1/2 md:pr-12 w-full hidden md:block"></div>
+                        <div class="hidden md:flex w-8 h-8 rounded-full bg-[var(--color-bg)] border border-[rgba(255,255,255,0.2)] absolute left-1/2 -translate-x-1/2 items-center justify-center z-10"></div>
+                        <div class="md:w-1/2 text-left md:pl-12 w-full">
+                            <h4 class="text-xl">② 編集部による選考</h4>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex flex-col md:flex-row items-center gap-6 fade-up">
+                        <div class="md:w-1/2 text-left md:text-right md:pr-12 w-full">
+                            <h4 class="text-xl">③ インタビュー実施</h4>
+                        </div>
+                        <div class="hidden md:flex w-8 h-8 rounded-full bg-[var(--color-bg)] border border-[rgba(255,255,255,0.2)] absolute left-1/2 -translate-x-1/2 items-center justify-center z-10"></div>
+                        <div class="md:w-1/2 md:pl-12 w-full hidden md:block"></div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="flex flex-col md:flex-row items-center gap-6 fade-up">
+                        <div class="md:w-1/2 md:pr-12 w-full hidden md:block"></div>
+                        <div class="hidden md:flex w-8 h-8 rounded-full bg-[var(--color-bg)] border border-[rgba(255,255,255,0.2)] absolute left-1/2 -translate-x-1/2 items-center justify-center z-10"></div>
+                        <div class="md:w-1/2 text-left md:pl-12 w-full">
+                            <h4 class="text-xl">④ 原稿編集・構成</h4>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="flex flex-col md:flex-row items-center gap-6 fade-up">
+                        <div class="md:w-1/2 text-left md:text-right md:pr-12 w-full">
+                            <h4 class="text-xl">⑤ 撮影</h4>
+                        </div>
+                        <div class="hidden md:flex w-8 h-8 rounded-full bg-[var(--color-bg)] border border-[rgba(255,255,255,0.2)] absolute left-1/2 -translate-x-1/2 items-center justify-center z-10"></div>
+                        <div class="md:w-1/2 md:pl-12 w-full hidden md:block"></div>
+                    </div>
+
+                    <!-- Step 6 -->
+                    <div class="flex flex-col md:flex-row items-center gap-6 fade-up">
+                        <div class="md:w-1/2 md:pr-12 w-full hidden md:block"></div>
+                        <div class="hidden md:flex w-8 h-8 rounded-full bg-[var(--color-bg)] border border-[rgba(255,255,255,0.2)] absolute left-1/2 -translate-x-1/2 items-center justify-center z-10"></div>
+                        <div class="md:w-1/2 text-left md:pl-12 w-full">
+                            <h4 class="text-xl">⑥ 最終確認</h4>
+                        </div>
+                    </div>
+
+                    <!-- Step 7 -->
+                    <div class="flex flex-col md:flex-row items-center gap-6 fade-up">
+                        <div class="md:w-1/2 text-left md:text-right md:pr-12 w-full">
+                            <h4 class="text-xl text-[var(--color-accent)]">⑦ 発行・納品・寄贈</h4>
+                        </div>
+                        <div class="hidden md:flex w-8 h-8 rounded-full bg-[var(--color-bg)] border border-[var(--color-accent)] absolute left-1/2 -translate-x-1/2 items-center justify-center z-10">
+                            <div class="w-2 h-2 bg-[var(--color-accent)] rounded-full"></div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 w-full hidden md:block"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ■ 掲載は「選考制」です -->
+    <section class="bg-gradient-noise text-center border-t border-b border-[rgba(255,255,255,0.05)]">
+        <div class="container max-w-3xl">
+            <h2 class="sec-title fade-up">
+                <span class="en">Selection</span>
+                <span class="text-unit">掲載は「選考制」です</span>
+            </h2>
+            <p class="fade-up text-lg mb-8">
+                <span class="text-unit">本プロジェクトは、</span><br>
+                <span class="text-unit">誰でも掲載できるものではありません。</span>
+            </p>
+            <p class="fade-up text-gray-400 mb-8">以下の観点で、編集部が選考を行います。</p>
+            
+            <div class="inline-block text-left bg-[rgba(0,0,0,0.5)] border border-[rgba(255,255,255,0.1)] p-8 md:p-12 mb-10 fade-up">
+                <ul class="space-y-4 text-gray-200">
+                    <li class="flex items-center"><div class="w-2 h-2 bg-[var(--color-accent)] mr-4 rotate-45"></div> 事業を通じた社会的価値</li>
+                    <li class="flex items-center"><div class="w-2 h-2 bg-[var(--color-accent)] mr-4 rotate-45"></div> 雇用や地域への貢献</li>
+                    <li class="flex items-center"><div class="w-2 h-2 bg-[var(--color-accent)] mr-4 rotate-45"></div> 経営者としての思想</li>
+                    <li class="flex items-center"><div class="w-2 h-2 bg-[var(--color-accent)] mr-4 rotate-45"></div> 次世代へのメッセージ性</li>
+                </ul>
+            </div>
+
+            <p class="fade-up text-xl md:text-2xl text-[var(--color-accent)] tracking-widest">
+                <span class="text-unit">掲載は、選ばれた</span><span class="text-unit font-bold text-3xl mx-2">100名</span><span class="text-unit">限定。</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- ■ 料金プラン -->
+    <section id="pricing">
+        <div class="container">
+            <h2 class="sec-title fade-up">
+                <span class="en">Pricing</span>
+                <span class="text-unit">料金プラン</span>
+            </h2>
+
+            <div class="flex flex-col md:flex-row gap-8 mt-12">
+                <!-- Standard -->
+                <div class="w-full md:w-1/2 border border-[rgba(255,255,255,0.1)] bg-[rgba(20,20,20,0.5)] p-8 md:p-12 fade-up relative overflow-hidden group hover:border-[rgba(255,255,255,0.3)] transition-colors">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-50"></div>
+                    <h3 class="text-2xl mb-2 text-center tracking-widest">スタンダードプラン</h3>
+                    <p class="text-center text-3xl md:text-4xl font-light mb-8 pb-8 border-b border-[rgba(255,255,255,0.1)]">
+                        398,000<span class="text-lg">円</span><span class="text-sm text-gray-500 ml-2">（税込）</span>
+                    </p>
+                    <ul class="space-y-4 text-gray-300 mx-auto w-fit">
+                        <li>・ 冊子掲載（2ページ）</li>
+                        <li>・ インタビュー</li>
+                        <li>・ 原稿編集</li>
+                        <li>・ ポートレート撮影</li>
+                        <li>・ 冊子進呈</li>
+                        <li>・ 母校寄贈</li>
+                    </ul>
+                </div>
+
+                <!-- Premium -->
+                <div class="w-full md:w-1/2 border border-[var(--color-accent)] bg-[rgba(20,20,20,0.8)] p-8 md:p-12 fade-up relative overflow-hidden group shadow-[0_0_30px_rgba(198,168,124,0.05)]" style="transition-delay: 0.1s;">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--color-accent)] to-transparent"></div>
+                    <div class="absolute top-4 right-4 bg-[var(--color-accent)] text-[var(--color-bg)] text-xs font-bold px-3 py-1 tracking-widest">RECOMMEND</div>
+                    <h3 class="text-2xl mb-2 text-center text-[var(--color-accent)] tracking-widest">プレミアムプラン</h3>
+                    <p class="text-center text-3xl md:text-4xl font-light mb-8 pb-8 border-b border-[rgba(198,168,124,0.2)] text-[var(--color-accent)]">
+                        598,000<span class="text-lg">円</span><span class="text-sm text-[var(--color-accent)] opacity-70 ml-2">（税込）</span>
+                    </p>
+                    <ul class="space-y-4 text-gray-300 mx-auto w-fit">
+                        <li class="text-white font-medium">・ スタンダードプランすべて</li>
+                        <li class="text-center text-[var(--color-accent)] py-2">＋</li>
+                        <li>・ 動画インタビュー制作</li>
+                        <li>・ ロング記事（約5,000字）</li>
+                        <li>・ 特設Webページ掲載</li>
+                        <li>・ SNS用コンテンツ提供</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-center text-sm text-gray-500 mt-8 fade-up">※分割支払い対応可能（詳細はご相談ください）</p>
+        </div>
+    </section>
+
+    <!-- ■ よくある質問 -->
+    <section class="bg-[var(--color-surface)]">
+        <div class="container max-w-3xl">
+            <h2 class="sec-title fade-up">
+                <span class="en">FAQ</span>
+                <span class="text-unit">よくある質問</span>
+            </h2>
+
+            <div class="mt-12 fade-up">
+                <div class="faq-item">
+                    <div class="faq-q"><span class="text-unit">Q. 忙しくても参加できますか？</span></div>
+                    <div class="faq-a">
+                        <p class="text-gray-300">A. インタビューは2〜3時間で完結し、その後の編集はすべてこちらで行います。経営者様の貴重なお時間を最小限に抑えつつ、最大限のクオリティで仕上げます。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q"><span class="text-unit">Q. 原稿の修正はできますか？</span></div>
+                    <div class="faq-a">
+                        <p class="text-gray-300">A. はい。最終確認の段階でご納得いただくまで調整可能です。ご自身の言葉として違和感のないよう、丁寧にすり合わせを行います。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q"><span class="text-unit">Q. 掲載内容の二次利用はできますか？</span></div>
+                    <div class="faq-a">
+                        <p class="text-gray-300">A. 自社サイト・採用資料・SNS等でご自由にご活用いただけます。貴重な「経営資産」として広く展開いただくことを推奨しております。</p>
+                    </div>
+                </div>
+                <div class="faq-item border-b-0">
+                    <div class="faq-q"><span class="text-unit">Q. 寄贈先は変更できますか？</span></div>
+                    <div class="faq-a">
+                        <p class="text-gray-300">A. はい。母校以外にも、ご縁のある地域や団体など、ご希望に応じて調整可能です。お気軽にご相談ください。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ■ 最後に & CTA -->
+    <section class="text-center relative overflow-hidden" id="entry">
+        <!-- 背景装飾 -->
+        <div class="absolute inset-0 z-0 opacity-20 pointer-events-none">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-[var(--color-accent)] rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="container relative z-10">
+            <h2 class="sec-title fade-up mb-12">
+                <span class="text-unit">あなたの人生は、</span><span class="text-unit">唯一無二です。</span>
+            </h2>
+            
+            <p class="fade-up text-lg md:text-xl text-gray-300 mb-8">
+                <span class="text-unit">しかしそれは、</span><br>
+                <span class="text-unit">言葉にしなければ、残りません。</span>
+            </p>
+            
+            <p class="fade-up text-lg md:text-xl text-gray-300 mb-12">
+                <span class="text-unit">経験も、判断も、哲学も、</span><br>
+                <span class="text-unit">伝わらなければ、</span><span class="text-unit">存在しなかったのと同じになる。</span>
+            </p>
+
+            <div class="line-v fade-up"></div>
+
+            <p class="fade-up text-xl md:text-2xl text-[var(--color-accent)] mb-16">
+                <span class="text-unit">だからこそ——</span><br><br>
+                <span class="text-unit text-3xl md:text-4xl mt-4 block font-light">あなたの人生を、公式記録に。</span>
+            </p>
+
+            <!-- CTA -->
+            <div class="btn-wrap fade-up mt-16">
+                <a href="#" class="btn btn-solid group">
+                    <span class="text-unit">掲載候補としてエントリーする</span>
+                    <span class="sub text-unit">（選考に進む）</span>
+                </a>
+                <a href="#contact" class="btn group">
+                    <span class="text-unit">まずは企画説明を受ける</span>
+                    <span class="sub text-unit">（オンライン30分）</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ■ フッター -->
+    <footer class="bg-[#050505] text-center py-12 border-t border-[rgba(255,255,255,0.05)]">
+        <div class="container">
+            <h3 class="text-[var(--color-accent)] tracking-[0.2em] font-light mb-6">JAPAN FOUNDER ARCHIVE 編集部</h3>
+            <div class="text-sm text-gray-500 space-y-2 mb-8">
+                <p>〒000-0000 東京都〇〇区〇〇 1-2-3</p>
+                <p>Email: info@japan-founder-archive.com</p>
+            </div>
+            <div class="flex justify-center space-x-6 text-xs text-gray-600">
+                <a href="#" class="hover:text-gray-300 transition-colors">運営会社</a>
+                <a href="#" class="hover:text-gray-300 transition-colors">プライバシーポリシー</a>
+                <a href="#" class="hover:text-gray-300 transition-colors">特定商取引法に基づく表記</a>
+            </div>
+            <p class="text-xs text-gray-700 mt-12">&copy; 2026 JAPAN FOUNDER ARCHIVE. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // DOMの読み込み完了後に実行
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // 1. ヒーローセクションの初期アニメーション
+            gsap.to('.hero-anim', {
+                y: 0,
+                opacity: 1,
+                duration: 1.5,
+                stagger: 0.2,
+                ease: "power3.out",
+                delay: 0.3
+            });
+
+            // 2. スクロール時のフェードアップアニメーション
+            gsap.utils.toArray('.fade-up').forEach(elem => {
+                gsap.to(elem, {
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: "top 85%", // 要素のトップが画面の85%の位置に来たら発火
+                    },
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    ease: "power3.out"
+                });
+            });
+
+            // 3. 画像のパララックス効果
+            gsap.utils.toArray('.img-wrapper').forEach(wrapper => {
+                const img = wrapper.querySelector('.img-parallax');
+                if(img) {
+                    gsap.to(img, {
+                        scrollTrigger: {
+                            trigger: wrapper,
+                            start: "top bottom",
+                            end: "bottom top",
+                            scrub: true // スクロール量に合わせてアニメーションを進める
+                        },
+                        y: "15%", // 画像を下にずらす
+                        ease: "none"
+                    });
+                }
+            });
+
+            // 4. FAQのアコーディオン動作（洗練された動き）
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const q = item.querySelector('.faq-q');
+                const a = item.querySelector('.faq-a');
+                
+                q.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    
+                    // 他のすべてを閉じる場合（今回は独立して開閉可能にする）
+                    // faqItems.forEach(otherItem => {
+                    //     otherItem.classList.remove('active');
+                    //     otherItem.querySelector('.faq-a').style.maxHeight = null;
+                    // });
+
+                    if (!isActive) {
+                        item.classList.add('active');
+                        a.style.maxHeight = a.scrollHeight + 40 + "px"; // padding分を追加
+                    } else {
+                        item.classList.remove('active');
+                        a.style.maxHeight = null;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
